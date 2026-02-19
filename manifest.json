@@ -1,0 +1,33 @@
+{
+  "name": "Intervals – Timer",
+  "short_name": "Intervals",
+  "description": "HIIT & Interval Timer for Tabata, Circuit Training, and custom workouts",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#111111",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "fitness", "sports"],
+  "shortcuts": [
+    {
+      "name": "Tabata",
+      "short_name": "Tabata",
+      "url": "./?template=tabata",
+      "description": "Start a Tabata workout"
+    }
+  ]
+}
