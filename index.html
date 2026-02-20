@@ -37,13 +37,22 @@
   </button>
 </nav>
 
-<!-- VIEWS -->
 <main class="main">
 
   <!-- ===== INTERVAL TIMER VIEW ===== -->
   <section class="view active" id="view-timer">
+
+    <!-- Active workout stage -->
     <div class="timer-stage" id="timerStage">
       <div class="stage-bg" id="stageBg"></div>
+
+      <!-- SVG progress ring -->
+      <div class="progress-ring-wrap" id="progressRingWrap">
+        <svg class="progress-ring" viewBox="0 0 220 220">
+          <circle class="pr-track" cx="110" cy="110" r="98"/>
+          <circle class="pr-fill" cx="110" cy="110" r="98" id="prFill"/>
+        </svg>
+      </div>
 
       <div class="timer-header">
         <div class="stat"><span class="stat-label">ELAPSED</span><span class="stat-value" id="elapsed">0:00</span></div>
@@ -52,12 +61,22 @@
       </div>
 
       <div class="timer-display">
+        <button class="time-mode-toggle" id="timeModeToggle" aria-label="Toggle count direction">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        </button>
         <div class="big-time" id="bigTime">00:00</div>
         <div class="warning-flash" id="warningFlash"></div>
       </div>
 
+      <!-- Prepare overlay (counts down before first interval) -->
+      <div class="prepare-overlay hidden" id="prepareOverlay">
+        <div class="prepare-label">GET READY</div>
+        <div class="prepare-count" id="prepareCount">5</div>
+        <div class="prepare-first" id="prepareFirst"></div>
+      </div>
+
       <div class="current-interval">
-        <div class="ci-label">CURRENT INTERVAL</div>
+        <div class="ci-label" id="ciLabel">CURRENT INTERVAL</div>
         <div class="ci-name" id="ciName">–</div>
         <div class="ci-duration" id="ciDuration">–</div>
       </div>
@@ -86,16 +105,37 @@
     <!-- Setup Panel -->
     <div class="setup-panel" id="setupPanel">
       <h2 class="setup-title">Configure Workout</h2>
+
       <div id="intervalList" class="interval-list"></div>
       <button class="add-interval-btn" id="addIntervalBtn">+ Add Interval</button>
 
       <div class="setup-row">
         <label>Rounds</label>
         <div class="number-input">
-          <button class="ni-dec" data-target="rounds">−</button>
+          <button class="ni-dec">−</button>
           <input type="number" id="roundsInput" value="1" min="1" max="99">
-          <button class="ni-inc" data-target="rounds">+</button>
+          <button class="ni-inc">+</button>
         </div>
+      </div>
+
+      <div class="setup-row">
+        <label>Prepare Countdown</label>
+        <select id="prepareSelect">
+          <option value="0">Off</option>
+          <option value="3">3 sec</option>
+          <option value="5" selected>5 sec</option>
+          <option value="10">10 sec</option>
+        </select>
+      </div>
+
+      <div class="setup-row">
+        <label>Warning At</label>
+        <select id="warnSelect">
+          <option value="0">Off</option>
+          <option value="3" selected>3 sec</option>
+          <option value="5">5 sec</option>
+          <option value="10">10 sec</option>
+        </select>
       </div>
 
       <div class="setup-row">
@@ -103,6 +143,10 @@
         <select id="soundSelect">
           <option value="beep">Beep</option>
           <option value="bell">Bell</option>
+          <option value="horn">Air Horn</option>
+          <option value="gong">Gong</option>
+          <option value="soft">Soft Chime</option>
+          <option value="boxing">Boxing Bell</option>
           <option value="silent">Silent</option>
         </select>
       </div>
@@ -110,6 +154,15 @@
       <div class="setup-row">
         <label>TTS Announce</label>
         <label class="toggle"><input type="checkbox" id="ttsToggle"><span class="slider"></span></label>
+      </div>
+
+      <div class="setup-row" id="ttsWarnRow" style="display:none">
+        <label>TTS Warn Ahead</label>
+        <select id="ttsWarnSelect">
+          <option value="0">Off</option>
+          <option value="5" selected>5 sec before</option>
+          <option value="10">10 sec before</option>
+        </select>
       </div>
 
       <div class="setup-actions">
@@ -171,7 +224,13 @@
 
   <!-- ===== TEMPLATES VIEW ===== -->
   <section class="view" id="view-templates">
-    <h2 class="tmpl-title">Workout Templates</h2>
+    <div class="tmpl-header">
+      <h2 class="tmpl-title">Templates</h2>
+      <div class="tmpl-tabs">
+        <button class="tmpl-tab active" data-tab="builtin">Built-in</button>
+        <button class="tmpl-tab" data-tab="custom">My Workouts</button>
+      </div>
+    </div>
     <div class="template-grid" id="templateGrid"></div>
   </section>
 
@@ -189,8 +248,13 @@
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- Full-screen 3-2-1 transition flash -->
+<div class="transition-overlay hidden" id="transitionOverlay">
+  <div class="transition-num" id="transitionNum"></div>
+  <div class="transition-name" id="transitionName"></div>
+</div>
 
+<div class="toast" id="toast"></div>
 <script src="app.js"></script>
 </body>
 </html>

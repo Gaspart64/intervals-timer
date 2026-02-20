@@ -3,7 +3,7 @@
    Cache-first strategy with network fallback
    ============================================================ */
 
-const CACHE_NAME = 'intervals-v1.2';
+const CACHE_NAME = 'intervals-v2.0';
 const ASSETS = [
   './',
   './index.html',
